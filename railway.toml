@@ -1,0 +1,7 @@
+# Railway - Build e Deploy
+# https://docs.railway.app/reference/build-and-start-commands
+# Build e Start são configuráveis no painel do serviço; aqui ficam os padrões.
+
+[deploy]
+buildCommand = "yarn install && npx prisma generate && npx prisma migrate deploy && yarn build"
+startCommand = "yarn start:prod"
