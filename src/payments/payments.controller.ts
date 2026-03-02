@@ -6,11 +6,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../common/decorators/current-user.decorator';
 
+@ApiTags('payments')
+@ApiBearerAuth('JWT')
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class PaymentsController {

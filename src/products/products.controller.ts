@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -18,6 +19,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../common/decorators/current-user.decorator';
 
+@ApiTags('products')
 @Controller()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -41,6 +43,7 @@ export class ProductsController {
   @Post('stores/:storeId/products')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   create(
     @Param('storeId') storeId: string,
     @CurrentUser() user: JwtPayload,
@@ -52,6 +55,7 @@ export class ProductsController {
   @Patch('products/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   update(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -63,6 +67,7 @@ export class ProductsController {
   @Delete('products/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.productsService.remove(id, user.sub);
   }
@@ -75,6 +80,7 @@ export class ProductsController {
   @Post('stores/:storeId/product-categories')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   createProductCategory(
     @Param('storeId') storeId: string,
     @CurrentUser() user: JwtPayload,

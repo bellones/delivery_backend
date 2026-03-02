@@ -6,6 +6,7 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DeliveriesService } from './deliveries.service';
 import { UpdateDeliveryStatusDto } from './dto/update-delivery-status.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
@@ -14,6 +15,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../common/decorators/current-user.decorator';
 
+@ApiTags('deliveries')
+@ApiBearerAuth('JWT')
 @Controller('deliveries')
 @UseGuards(JwtAuthGuard)
 export class DeliveriesController {

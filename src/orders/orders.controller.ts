@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
@@ -16,6 +17,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../common/decorators/current-user.decorator';
 
+@ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -23,12 +25,14 @@ export class OrdersController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('CUSTOMER')
+  @ApiBearerAuth('JWT')
   create(@CurrentUser() user: JwtPayload, @Body() dto: CreateOrderDto) {
     return this.ordersService.create(user.sub, dto);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT')
   findAll(
     @CurrentUser() user: JwtPayload,
     @Query('storeId') storeId?: string,
@@ -38,6 +42,7 @@ export class OrdersController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT')
   findOne(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -48,6 +53,7 @@ export class OrdersController {
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'DRIVER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   updateStatus(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,

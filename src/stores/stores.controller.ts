@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -16,6 +17,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../common/decorators/current-user.decorator';
 
+@ApiTags('stores')
 @Controller('stores')
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
@@ -41,6 +43,7 @@ export class StoresController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   create(@CurrentUser() user: JwtPayload, @Body() dto: CreateStoreDto) {
     return this.storesService.create(user.sub, dto);
   }
@@ -48,6 +51,7 @@ export class StoresController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   update(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -59,6 +63,7 @@ export class StoresController {
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('STORE_OWNER', 'SUPER_ADMIN')
+  @ApiBearerAuth('JWT')
   updateStatus(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
