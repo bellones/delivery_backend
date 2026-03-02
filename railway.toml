@@ -3,5 +3,5 @@
 # Build e Start são configuráveis no painel do serviço; aqui ficam os padrões.
 
 [deploy]
-buildCommand = "yarn install && npx prisma generate && npx prisma migrate deploy && yarn build"
+buildCommand = "yarn install && npx prisma generate && npx prisma migrate deploy && yarn build && npx prisma db seed"
 startCommand = "yarn start:prod"
