@@ -226,8 +226,6 @@ async function main() {
   console.log('Seed: produtos criados.');
 
   // 6. Pedidos com itens, entregas e pagamentos (apenas se ainda não existir)
-  const productsStore1 = await prisma.product.findMany({ where: { storeId: store1.id }, take: 4 });
-  const productsStore2 = await prisma.product.findMany({ where: { storeId: store2.id }, take: 3 });
   const hasOrders = (await prisma.order.count()) > 0;
   if (hasOrders) {
     console.log('Seed: pedidos já existem, pulando criação.');

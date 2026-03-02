@@ -93,8 +93,8 @@ export class DeliveriesService {
     if (dto.status === DeliveryStatus.DELIVERED) {
       data.deliveredAt = new Date();
     }
-    const tx: Promise<unknown>[] = [
-      this.prisma.delivery.update({
+    const updatedDelivery = await this.prisma.$transaction(async (tx) => {
+      const d = await tx.delivery.update({
         where: { id: deliveryId },
         data,
         include: {
@@ -106,25 +106,21 @@ export class DeliveriesService {
             },
           },
         },
-      }),
-    ];
-    if (dto.status === DeliveryStatus.PICKED_UP) {
-      tx.push(
-        this.prisma.order.update({
+      });
+      if (dto.status === DeliveryStatus.PICKED_UP) {
+        await tx.order.update({
           where: { id: delivery.orderId },
           data: { status: 'IN_DELIVERY' },
-        }),
-      );
-    }
-    if (dto.status === DeliveryStatus.DELIVERED) {
-      tx.push(
-        this.prisma.order.update({
+        });
+      }
+      if (dto.status === DeliveryStatus.DELIVERED) {
+        await tx.order.update({
           where: { id: delivery.orderId },
           data: { status: 'DELIVERED' },
-        }),
-      );
-    }
-    const [updatedDelivery] = await this.prisma.$transaction(tx);
+        });
+      }
+      return d;
+    });
     return updatedDelivery;
   }
 
