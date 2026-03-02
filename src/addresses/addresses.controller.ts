@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AddressesService } from './addresses.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
@@ -36,6 +36,7 @@ export class AddressesController {
   }
 
   @Patch(':id')
+  @ApiParam({ name: 'id', description: 'ID do endereço' })
   update(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -45,6 +46,7 @@ export class AddressesController {
   }
 
   @Delete(':id')
+  @ApiParam({ name: 'id', description: 'ID do endereço' })
   remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.addressesService.remove(id, user.sub);
   }
